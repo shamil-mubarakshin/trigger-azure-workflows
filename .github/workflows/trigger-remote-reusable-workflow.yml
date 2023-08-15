@@ -1,0 +1,55 @@
+name: Trigger Build workflow in remote repo
+
+on:
+  workflow_call:
+    inputs:
+      repo_owner:
+        required: true
+        type: string
+      repo_name:
+        required: true
+        type: string
+      image_type:
+        required: true
+        type: string
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  trigger-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Build workflow in remote repo
+        env:
+          BEARER_TOKEN: ${{secrets.BEARER_TOKEN}}
+        run: |
+          $headers = @{
+            Authorization="Bearer $env:BEARER_TOKEN"
+          }
+
+          # Private repository for builds
+          $apiRepoUrl = "https://api.github.com/repos/${{ inputs.repo_owner }}/${{ inputs.repo_name }}"
+          $dispatchUrl = $apiRepoUrl
+
+          $EventType = "trigger-${{ inputs.image_type }}-build"
+          $body = @{
+            event_type = $EventType;
+            client_payload = @{
+              pr_title = "${{ github.event.pull_request.title }}"
+              custom_repo = "${{ github.event.pull_request.head.repo.full_name }}"
+              custom_repo_commit_hash = "${{ github.event.pull_request.head.sha }}"
+            }
+          }
+
+          $BodyString = $body | ConvertTo-Json
+
+          # debug
+          $BodyString
+
+          try {
+            Invoke-WebRequest -Uri "$dispatchUrl/dispatches" -Method Post -Headers $headers -Body $BodyString | Out-Null
+          } catch {
+            throw "$($_.exception[0].message)"
+          }
