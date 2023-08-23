@@ -27,8 +27,6 @@ jobs:
 
   trigger-workflow:
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
     steps:
       - name: Create Check Run with Octokit action
         id: create-status-check

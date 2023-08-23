@@ -21,6 +21,8 @@ jobs:
   Ubuntu_2004:
     if: contains(github.event.pull_request.labels.*.name, 'CI ubuntu-all') || contains(github.event.pull_request.labels.*.name, 'CI ubuntu-2004')
     uses: ./.github/workflows/trigger-remote-reusable-workflow.yml
+    permissions:
+      checks: write
     with:
       repo_owner: 'shamil-mubarakshin'
       repo_name: 'azure-workflows'
