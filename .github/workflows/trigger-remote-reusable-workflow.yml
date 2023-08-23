@@ -38,7 +38,7 @@ jobs:
           script: |
             const response = await github.rest.checks.create({
               owner: "shamil-mubarakshin",
-              repo: "tests-repository",
+              repo: "trigger-azure-workflows",
               head_sha: "${{ github.event.pull_request.head.sha }}",
               name: "Image Build",
               status: "queued",

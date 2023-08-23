@@ -66,7 +66,7 @@ jobs:
           script: |
             const response = await github.rest.checks.update({
               owner: "shamil-mubarakshin",
-              repo: "tests-repository",
+              repo: "trigger-azure-workflows",
               check_run_id: "${{ github.event.client_payload.check_run_id }}",
               status: "in_progress",
               output: {
@@ -88,7 +88,7 @@ jobs:
           script: |
             const response = await github.rest.checks.update({
               owner: "shamil-mubarakshin",
-              repo: "tests-repository",
+              repo: "trigger-azure-workflows",
               check_run_id: "${{ github.event.client_payload.check_run_id }}",
               conclusion: "${{ github.event.client_payload.conclusion }}",
               output: {
