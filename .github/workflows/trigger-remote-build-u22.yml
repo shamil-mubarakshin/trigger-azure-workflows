@@ -23,6 +23,7 @@ jobs:
     uses: ./.github/workflows/trigger-remote-reusable-workflow.yml
     permissions:
       checks: write
+      pull-requests: write
     with:
       repo_owner: 'shamil-mubarakshin'
       repo_name: 'azure-workflows'

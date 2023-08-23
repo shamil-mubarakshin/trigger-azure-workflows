@@ -27,7 +27,7 @@ jobs:
     permissions:
     #   actions: write
       checks: write
-    #   pull-requests: write
+      pull-requests: write
     steps:
       - name: Display event trigger data
         run: Get-Content $env:GITHUB_EVENT_PATH | ConvertFrom-Json
