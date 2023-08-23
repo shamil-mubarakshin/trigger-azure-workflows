@@ -24,9 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     # outputs:
     #   check_run_id: ${{ steps.create-status-check.outputs.result }}
-    # permissions:
+    permissions:
     #   actions: write
-    #   checks: write
+      checks: write
     #   pull-requests: write
     steps:
       - name: Display event trigger data
