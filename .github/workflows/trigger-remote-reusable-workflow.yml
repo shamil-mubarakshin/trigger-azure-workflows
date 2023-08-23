@@ -40,7 +40,7 @@ jobs:
               owner: "shamil-mubarakshin",
               repo: "trigger-azure-workflows",
               head_sha: "${{ github.event.pull_request.head.sha }}",
-              name: "Image Build",
+              name: "${{ inputs.image_type }} Image Build",
               status: "queued",
               output: {
                 title: "${{ inputs.image_type }} Image CI",
