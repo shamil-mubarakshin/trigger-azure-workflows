@@ -1,4 +1,4 @@
-name: Trigger Build workflow in remote repo
+name: Create PR check and tTrigger Build workflow in remote repo
 
 on:
   workflow_call:
@@ -18,12 +18,42 @@ defaults:
     shell: pwsh
 
 jobs:
+  # create_pr_check:
+  #   uses: ./.github/workflows/manage-pr-check.yml
+  #   with:
+  #     image_type: '${{ inputs.image_type }}'
+  #     head_sha: '${{ github.event.pull_request.head.sha }}'
+  #   secrets: inherit
+
   trigger-workflow:
     runs-on: ubuntu-latest
     steps:
+      - name: Create Check Run with Octokit action
+        id: create-status-check
+        uses: actions/github-script@v6
+        with:
+          debug: true
+          result-encoding: string
+          github-token: ${{ github.token }}
+          script: |
+            const response = await github.rest.checks.create({
+              owner: "shamil-mubarakshin",
+              repo: "tests-repository",
+              head_sha: "${{ github.event.pull_request.head.sha }}",
+              name: "Image Build",
+              status: "queued",
+              output: {
+                title: "${{ inputs.image_type }} Image CI",
+                summary: "Build is being queued",
+                text: ""
+              }
+            });
+
+            return response.data.id;
+
       - name: Trigger Build workflow in remote repo
         env:
-          BEARER_TOKEN: ${{secrets.BEARER_TOKEN}}
+          BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
         run: |
           $headers = @{
             Authorization="Bearer $env:BEARER_TOKEN"
@@ -40,6 +70,7 @@ jobs:
               pr_title = "${{ github.event.pull_request.title }}"
               custom_repo = "${{ github.event.pull_request.head.repo.full_name }}"
               custom_repo_commit_hash = "${{ github.event.pull_request.head.sha }}"
+              check_run_id = "${{ steps.create-status-check.outputs.result }}"
             }
           }
 
