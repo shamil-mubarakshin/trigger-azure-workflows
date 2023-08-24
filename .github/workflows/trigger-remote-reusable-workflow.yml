@@ -28,28 +28,28 @@ jobs:
   trigger-workflow:
     runs-on: ubuntu-latest
     steps:
-      - name: Create Check Run with Octokit action
-        id: create-status-check
-        uses: actions/github-script@v6
-        with:
-          debug: true
-          result-encoding: string
-          github-token: ${{ github.token }}
-          script: |
-            const response = await github.rest.checks.create({
-              owner: "shamil-mubarakshin",
-              repo: "trigger-azure-workflows",
-              head_sha: "${{ github.event.pull_request.head.sha }}",
-              name: "${{ inputs.image_type }} Image Build",
-              status: "queued",
-              output: {
-                title: "${{ inputs.image_type }} Image CI",
-                summary: "Build is being queued",
-                text: ""
-              }
-            });
+      # - name: Create Check Run with Octokit action
+      #   id: create-status-check
+      #   uses: actions/github-script@v6
+      #   with:
+      #     debug: true
+      #     result-encoding: string
+      #     github-token: ${{ github.token }}
+      #     script: |
+      #       const response = await github.rest.checks.create({
+      #         owner: "shamil-mubarakshin",
+      #         repo: "trigger-azure-workflows",
+      #         head_sha: "${{ github.event.pull_request.head.sha }}",
+      #         name: "${{ inputs.image_type }} Image Build",
+      #         status: "queued",
+      #         output: {
+      #           title: "${{ inputs.image_type }} Image CI",
+      #           summary: "Build is being queued",
+      #           text: ""
+      #         }
+      #       });
 
-            return response.data.id;
+      #       return response.data.id;
 
       - name: Trigger Build workflow in remote repo
         env:
@@ -70,7 +70,6 @@ jobs:
               pr_title = "${{ github.event.pull_request.title }}"
               custom_repo = "${{ github.event.pull_request.head.repo.full_name }}"
               custom_repo_commit_hash = "${{ github.event.pull_request.head.sha }}"
-              check_run_id = "${{ steps.create-status-check.outputs.result }}"
             }
           }
 

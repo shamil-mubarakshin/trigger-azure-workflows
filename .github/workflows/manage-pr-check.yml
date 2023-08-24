@@ -2,18 +2,6 @@ run-name: ${{ github.event.client_payload.action_type }} PR Check for Image Buil
 on:
   repository_dispatch:
     types: [manage-pr-check]
-  # workflow_call:
-  #   inputs:
-  #     image_type:
-  #       type: string
-  #       description: An OS image to build
-  #       required: true
-  #     head_sha:
-  #       type: string
-  #       description: Pull Request SHA
-  #       required: true
-  #   outputs:
-  #     check_run_id: ${{ jobs.manage-pr-check.outputs.check_run_id }}
 
 defaults:
   run:
@@ -22,39 +10,37 @@ defaults:
 jobs:
   manage-pr-check:
     runs-on: ubuntu-latest
-    # outputs:
-    #   check_run_id: ${{ steps.create-status-check.outputs.result }}
     permissions:
     #   actions: write
       checks: write
-      pull-requests: write
+      # pull-requests: write
     steps:
       - name: Display event trigger data
         run: Get-Content $env:GITHUB_EVENT_PATH | ConvertFrom-Json
 
-      # - name: Create Check Run with Octokit action
-      #   if: github.event_name != 'repository_dispatch'
-      #   id: create-status-check
-      #   uses: actions/github-script@v6
-      #   with:
-      #     debug: true
-      #     result-encoding: string
-      #     github-token: ${{github.token}}
-      #     script: |
-      #       const response = await github.rest.checks.create({
-      #         owner: "shamil-mubarakshin",
-      #         repo: "tests-repository",
-      #         head_sha: "${{ github.event.inputs.head_sha }}",
-      #         name: "Image Build",
-      #         status: "queued",
-      #         output: {
-      #           title: "${{ github.event.inputs.image_type }} Image CI",
-      #           summary: "Build is being queued",
-      #           text: ""
-      #         }
-      #       });
+      - name: Create Check Run with Octokit action
+        if: github.event.client_payload.action_type == 'Create'
+        id: create-status-check
+        uses: actions/github-script@v6
+        with:
+          debug: true
+          result-encoding: string
+          github-token: ${{ github.token }}
+          script: |
+            const response = await github.rest.checks.create({
+              owner: "shamil-mubarakshin",
+              repo: "trigger-azure-workflows",
+              head_sha: "${{ github.event.client_payload.head_sha }}",
+              name: "${{ github.event.client_payload.check_name }}",
+              status: "in_progress",
+              output: {
+                title: "${{ github.event.client_payload.output_title }}",
+                summary: "${{ github.event.client_payload.output_summary }}",
+                text: "${{ github.event.client_payload.output_text }}"
+              }
+            });
 
-      #       return response.data.id;
+            return response.data.id;
 
       - name: Update Check Run with Octokit action
         if: github.event.client_payload.action_type == 'Update'
