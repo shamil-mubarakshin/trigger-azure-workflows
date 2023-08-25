@@ -1,4 +1,4 @@
-name: Trigger Windows22 CI
+name: Trigger Windows19 CI
 run-name: Windows2019 - ${{ github.event.pull_request.title }}
 on:
   # workflow_dispatch:
