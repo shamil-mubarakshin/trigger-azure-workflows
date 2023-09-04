@@ -11,9 +11,7 @@ jobs:
   manage-pr-check:
     runs-on: ubuntu-latest
     permissions:
-    #   actions: write
       checks: write
-      # pull-requests: write
     steps:
       - name: Display event trigger data
         run: Get-Content $env:GITHUB_EVENT_PATH | ConvertFrom-Json
@@ -28,8 +26,8 @@ jobs:
           github-token: ${{ github.token }}
           script: |
             const response = await github.rest.checks.create({
-              owner: "shamil-mubarakshin",
-              repo: "trigger-azure-workflows",
+              owner: "${{ github.repository_owner }}",
+              repo: "${{ github.event.repository.name }}",
               head_sha: "${{ github.event.client_payload.head_sha }}",
               name: "${{ github.event.client_payload.check_name }}",
               status: "in_progress",
@@ -51,8 +49,8 @@ jobs:
           github-token: ${{ github.token }}
           script: |
             const response = await github.rest.checks.update({
-              owner: "shamil-mubarakshin",
-              repo: "trigger-azure-workflows",
+              owner: "${{ github.repository_owner }}",
+              repo: "${{ github.event.repository.name }}",
               check_run_id: "${{ github.event.client_payload.check_run_id }}",
               status: "in_progress",
               output: {
@@ -73,8 +71,8 @@ jobs:
           github-token: ${{ github.token }}
           script: |
             const response = await github.rest.checks.update({
-              owner: "shamil-mubarakshin",
-              repo: "trigger-azure-workflows",
+              owner: "${{ github.repository_owner }}",
+              repo: "${{ github.event.repository.name }}",
               check_run_id: "${{ github.event.client_payload.check_run_id }}",
               conclusion: "${{ github.event.client_payload.conclusion }}",
               output: {

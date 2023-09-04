@@ -1,4 +1,4 @@
-name: Create PR check and tTrigger Build workflow in remote repo
+name: Create PR check and Trigger Build workflow in remote repo
 
 on:
   workflow_call:
@@ -18,39 +18,9 @@ defaults:
     shell: pwsh
 
 jobs:
-  # create_pr_check:
-  #   uses: ./.github/workflows/manage-pr-check.yml
-  #   with:
-  #     image_type: '${{ inputs.image_type }}'
-  #     head_sha: '${{ github.event.pull_request.head.sha }}'
-  #   secrets: inherit
-
   trigger-workflow:
     runs-on: ubuntu-latest
     steps:
-      # - name: Create Check Run with Octokit action
-      #   id: create-status-check
-      #   uses: actions/github-script@v6
-      #   with:
-      #     debug: true
-      #     result-encoding: string
-      #     github-token: ${{ github.token }}
-      #     script: |
-      #       const response = await github.rest.checks.create({
-      #         owner: "shamil-mubarakshin",
-      #         repo: "trigger-azure-workflows",
-      #         head_sha: "${{ github.event.pull_request.head.sha }}",
-      #         name: "${{ inputs.image_type }} Image Build",
-      #         status: "queued",
-      #         output: {
-      #           title: "${{ inputs.image_type }} Image CI",
-      #           summary: "Build is being queued",
-      #           text: ""
-      #         }
-      #       });
-
-      #       return response.data.id;
-
       - name: Trigger Build workflow in remote repo
         env:
           BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
@@ -61,7 +31,6 @@ jobs:
 
           # Private repository for builds
           $apiRepoUrl = "https://api.github.com/repos/${{ inputs.repo_owner }}/${{ inputs.repo_name }}"
-          $dispatchUrl = $apiRepoUrl
 
           $EventType = "trigger-${{ inputs.image_type }}-build"
           $body = @{
@@ -75,11 +44,8 @@ jobs:
 
           $BodyString = $body | ConvertTo-Json
 
-          # debug
-          $BodyString
-
           try {
-            Invoke-WebRequest -Uri "$dispatchUrl/dispatches" -Method Post -Headers $headers -Body $BodyString | Out-Null
+            Invoke-WebRequest -Uri "$apiRepoUrl/dispatches" -Method Post -Headers $headers -Body $BodyString | Out-Null
           } catch {
             throw "$($_.exception[0].message)"
           }
