@@ -1,7 +1,7 @@
 name: Trigger Windows22 CI
 run-name: Windows2022 - ${{ github.event.pull_request.title }}
 on:
-  pull_request:
+  pull_request_target:
     types: labeled
     # paths:
     # - 'images/linux/**'
