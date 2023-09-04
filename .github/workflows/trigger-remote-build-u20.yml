@@ -1,5 +1,5 @@
-name: Trigger Ubuntu20.04 CI test test
-run-name: Ubuntu20.04 - ${{ github.event.pull_request.title }} test test
+name: Trigger Ubuntu20.04 CI test test test
+run-name: Ubuntu20.04 - ${{ github.event.pull_request.title }} test test test
 on:
   pull_request:
     types: labeled
