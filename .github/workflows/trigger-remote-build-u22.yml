@@ -1,7 +1,7 @@
 name: Trigger Ubuntu22.04 CI
 run-name: Ubuntu22.04 - ${{ github.event.pull_request.title }}
 on:
-  pull_request_target:
+  pull_request:
     types: labeled
     # paths:
     # - 'images/linux/**'

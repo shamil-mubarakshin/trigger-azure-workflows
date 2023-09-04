@@ -1,7 +1,7 @@
 name: Trigger Windows19 CI
 run-name: Windows2019 - ${{ github.event.pull_request.title }}
 on:
-  pull_request_target:
+  pull_request:
     types: labeled
     # paths:
     # - 'images/linux/**'
