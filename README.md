@@ -2,7 +2,7 @@ This is a 'fork' of https://github.com/actions/runner-images!!!!!
 
 
 
-# GitHub Actions Runner Images.
+# GitHub Actions Runner Images...
 
 **Table of Contents**
 
