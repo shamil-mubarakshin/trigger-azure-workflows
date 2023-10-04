@@ -18,40 +18,41 @@ jobs:
   trigger-workflow:
     runs-on: ubuntu-latest
     steps:
-      - name: Create Check run
-        id: create-pr-check
-        env:
-          CI_PR_TOKEN: ${{ secrets.CI_PR_TOKEN }}
-        run: |
-          $headers = @{
-            Authorization="Bearer $env:CI_PR_TOKEN"
-          }
+      # - name: Create Check run
+      #   id: create-pr-check
+      #   env:
+      #     CI_PR_TOKEN: ${{ secrets.CI_PR_TOKEN }}
+      #     PR_TITLE: ${{ github.event.pull_request.title }}
+      #   run: |
+      #     $headers = @{
+      #       Authorization="Bearer $env:CI_PR_TOKEN"
+      #     }
 
-          # Public repository with PRs
-          $apiRepoUrl = "https://api.github.com/repos/${{ github.repository }}"
+      #     # Public repository with PRs
+      #     $apiRepoUrl = "https://api.github.com/repos/${{ github.repository }}"
 
-          $checkName = "${{ inputs.image_type }}.unstable.$(${{ github.run_id }} % [System.UInt32]::MaxValue)"
-          $EventType = "manage-pr-check"
-          $body = @{
-            event_type = $EventType;
-            client_payload = @{
-              action_type = "Create"
-              pr_title = "${{ github.event.client_payload.pr_title }}"
-              head_sha = "${{ inputs.custom_repo_commit_hash }}"
-              check_name = $checkName
-              output_title = "${{ inputs.image_type }} Image CI"
-              output_summary = "Image Build Started"
-              output_text = "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            }
-          }
+      #     $checkName = "${{ inputs.image_type }}.unstable.$(${{ github.run_id }} % [System.UInt32]::MaxValue)"
+      #     $EventType = "manage-pr-check"
+      #     $body = @{
+      #       event_type = $EventType;
+      #       client_payload = @{
+      #         action_type = "Create"
+      #         pr_title = "$env:PR_TITLE"
+      #         head_sha = "${{ github.event.pull_request.head.sha }}"
+      #         check_name = $checkName
+      #         output_title = "${{ inputs.image_type }} Image CI"
+      #         output_summary = "Image Build Started"
+      #         output_text = "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+      #       }
+      #     }
 
-          $BodyString = $body | ConvertTo-Json
+      #     $BodyString = $body | ConvertTo-Json
 
-          try {
-            Invoke-WebRequest -Uri "$apiRepoUrl/dispatches" -Method Post -Headers $headers -Body $BodyString | Out-Null
-          } catch {
-            throw "$($_.exception[0].message)"
-          }
+      #     try {
+      #       Invoke-WebRequest -Uri "$apiRepoUrl/dispatches" -Method Post -Headers $headers -Body $BodyString | Out-Null
+      #     } catch {
+      #       throw "$($_.exception[0].message)"
+      #     }
 
       - name: Trigger Build workflow
         env:
