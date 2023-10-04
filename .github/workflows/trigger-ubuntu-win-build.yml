@@ -3,9 +3,6 @@ name: Trigger Build workflow
 on:
   workflow_call:
     inputs:
-      repository:
-        required: true
-        type: string
       image_type:
         required: true
         type: string
@@ -58,13 +55,14 @@ jobs:
         env:
           CI_PR_TOKEN: ${{ secrets.CI_PR_TOKEN }}
           PR_TITLE: ${{ github.event.pull_request.title }}
+          CI_REPO: ${{ secrets.CI_REPO }}
         run: |
           $headers = @{
             Authorization="Bearer $env:CI_PR_TOKEN"
           }
 
           # Private repository for builds
-          $apiRepoUrl = "https://api.github.com/repos/${{ inputs.repository }}"
+          $apiRepoUrl = "https://api.github.com/repos/$env:CI_REPO"
 
           $EventType = "trigger-${{ inputs.image_type }}-build"
           $body = @{
