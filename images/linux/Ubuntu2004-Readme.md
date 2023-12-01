@@ -1,4 +1,4 @@
-# Ubuntu 20.04
+# Ubuntu 20.04...
 - OS Version: 20.04.6 LTS
 - Kernel Version: 5.15.0-1042-azure
 - Image Version: 20230821.1.0
