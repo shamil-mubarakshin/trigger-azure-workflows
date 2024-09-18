@@ -13,7 +13,7 @@ defaults:
 
 jobs:
   some_info:
-    if: contains(github.event.label.name, 'CI ubuntu-all') || contains(github.event.label.name, 'CI ubuntu-2004')
+    if: github.event.label.name == 'CI ubuntu-all' || github.event.label.name == 'CI ubuntu-2004'
     runs-on: ubuntu-latest
     steps:
       - name: Print env vars
