@@ -12,6 +12,29 @@ defaults:
     shell: pwsh
 
 jobs:
+  some_info:
+    if: contains(github.event.label.name, 'CI ubuntu-all') || contains(github.event.label.name, 'CI ubuntu-2004')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print env vars
+        run: 
+          Get-ChildItem env:\
+        
+      - name: Print actions trigger
+        run: Get-Content $env:GITHUB_EVENT_PATH | ConvertFrom-Json
+  
+      - name: Dump GitHub context and PATH
+        shell: bash
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
+          echo "========================"
+          echo "$PATH"
+
+      - run: |
+          Write-Host $(${{ github.event }} | ConvertFrom-Json)
+          
   Ubuntu_2204:
     # if: contains(github.event.pull_request.labels.*.name, 'CI ubuntu-all') || contains(github.event.pull_request.labels.*.name, 'CI ubuntu-2204')
     if: contains(github.event.label.name, 'CI ubuntu-all') || contains(github.event.label.name, 'CI ubuntu-2204')
