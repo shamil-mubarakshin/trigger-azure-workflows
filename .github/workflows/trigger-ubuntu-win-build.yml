@@ -14,6 +14,9 @@ defaults:
 jobs:
   trigger-workflow:
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.head_ref }}
+      cancel-in-progress: true
     steps:
       # - name: Create Check run
       #   id: create-pr-check
